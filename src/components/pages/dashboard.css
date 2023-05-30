@@ -1,0 +1,57 @@
+header { 
+    height: auto;
+    background-color: #2D4E5E !important;
+}
+
+header h1, header button {
+    font-family: 'Nunito', sans-serif !important;
+    color:#C5FCEE !important;
+    letter-spacing: 1px !important;
+}
+
+main {
+    background-image: url('../../assets/images/bg.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+main h1 {
+    font-size: 1.5rem;
+    font-family: 'Righteous', cursive;
+    text-transform: uppercase;
+    letter-spacing: 1px !important;
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper {
+    background-color: #3d4e4d !important;
+    /* #c5fcee */
+    height: calc(100% - 3.2rem);
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper a,
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper svg {
+    font-family: 'Nunito', sans-serif !important;
+    text-transform: uppercase;
+    color:#c5fcee !important;
+    /* #2E535C */
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper a {
+    font-size: 14px !important;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+main a.dashboard-add-certificate .MuiPaper-root:hover,
+main a.dashboard-view-certificates .MuiPaper-root:hover {
+    transition: all .3s;
+}
+
+main a.dashboard-add-certificate .MuiPaper-root:hover {
+    background-color: rgb(184, 96, 9) !important;
+}
+
+main a.dashboard-view-certificates .MuiPaper-root:hover {
+    background-color: #886692 !important;
+}
