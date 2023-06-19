@@ -15,7 +15,7 @@ const styleIconInput = {
 
 export default function ForgetPasswordPage() {
     return (
-        <div className="forget-pass-page text-center m-5-auto">
+        <div className="forget-pass-page text-center">
             <h2>Reseteaza parola</h2>
             <h5>Introdu adresa ta de email si iti vom trimite o noua parola</h5>
             <form action="/login">

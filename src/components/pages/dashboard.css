@@ -1,9 +1,9 @@
-header { 
+nav { 
     height: auto;
     background-color: #2D4E5E !important;
 }
 
-header h1, header button {
+nav h1, nav button {
     font-family: 'Nunito', sans-serif !important;
     color:#C5FCEE !important;
     letter-spacing: 1px !important;
@@ -23,29 +23,59 @@ main h1 {
     letter-spacing: 1px !important;
 }
 
-.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper {
+/* .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper {
     background-color: #3d4e4d !important;
-    /* #c5fcee */
     height: calc(100% - 3.2rem);
+} */
+
+.css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
+    background-color: #2D4E5E !important;
+    /* background-color: #3d4e4d !important; */
 }
 
-.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper a,
+/* .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper a,
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper svg {
     font-family: 'Nunito', sans-serif !important;
     text-transform: uppercase;
     color:#c5fcee !important;
-    /* #2E535C */
+} */
+
+.css-10hburv-MuiTypography-root, .css-83ijpv-MuiTypography-root {
+    font-family: 'Nunito', sans-serif !important;
+    text-transform: uppercase;
+    color:#c5fcee !important;
 }
 
-.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper a {
+/* .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper a {
     font-size: 14px !important;
     font-weight: 500;
     letter-spacing: 0.5px;
+} */
+
+.css-1kkpk3h-MuiButtonBase-root-MuiButton-root {
+    border-bottom: 3px solid transparent !important;
+    padding: 2px 6px !important;
+    border-radius: 0 !important;
 }
 
-main a.dashboard-add-certificate .MuiPaper-root:hover,
+.css-1kkpk3h-MuiButtonBase-root-MuiButton-root:hover {
+    background-color: transparent !important;
+    border-bottom-color: #C5FCEE !important;
+}
+
+.css-1d4vqq0-MuiButtonBase-root-MuiListItemButton-root {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* main a.dashboard-add-certificate .MuiPaper-root:hover,
 main a.dashboard-view-certificates .MuiPaper-root:hover {
     transition: all .3s;
+} */
+
+.css-1uwgr7b-MuiTypography-root {
+    font-family: 'Nunito', sans-serif !important;
+    color:#2D4E5E !important;
 }
 
 main a.dashboard-add-certificate .MuiPaper-root:hover {
@@ -53,5 +83,5 @@ main a.dashboard-add-certificate .MuiPaper-root:hover {
 }
 
 main a.dashboard-view-certificates .MuiPaper-root:hover {
-    background-color: #886692 !important;
+    background-color: #72537c !important;
 }

@@ -22,27 +22,7 @@ export default function App() {
                     <Route path="/home-student" component={ DashboardStudent } />
                     <Route path="/add-certificate" component={ AddStudentCertificate } />
                 </Switch>
-                {/* <Footer /> */}
             </div>
         </Router>
     )
 }
-
-// const Footer = () => {
-//     return (
-//         <p className="footer text-center" style={ FooterStyle }>Designed & coded by ... </p>
-//     )
-// }
-
-// const FooterStyle = {
-//     background: "#252f30",
-//     fontSize: ".8rem",
-//     fontFamily: "Nunito",
-//     color: "#fff",
-//     // position: "absolute",
-//     // bottom: 0,
-//     padding: "1rem",
-//     margin: 0,
-//     width: "100%",
-//     opacity: "1"
-// }

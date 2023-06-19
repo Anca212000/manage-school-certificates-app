@@ -8,7 +8,7 @@ import HomePageLogo from '../../assets/images/circles-home.png'
 
 export default function LandingPage() {
     return (
-        <header style={ HeaderStyle }>
+        <header className="intro-page" style={ HeaderStyle }>
             <div class="d-flex flex-lg-nowrap flex-md-wrap flex-sm-wrap flex-wrap align-items-center justify-content-center" style={{ maxWidth: '80%', margin: '0 auto'}}>
                 <div>
                     <FadeIn>

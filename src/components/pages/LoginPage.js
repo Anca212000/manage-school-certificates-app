@@ -17,30 +17,28 @@ const styleIconInput = {
 
 export default function SignInPage() {
     return (
-        <div>
-            <FadeIn>
-            <div className="login-page text-center m-5-auto">
-                <h2>Conecteaza-te</h2>
-                <form action="/home">
-                    <p>
-                        <label><FontAwesomeIcon icon={faUser} style={styleIconInput} />&nbsp;Nume de utilizator sau email</label><br/>
-                        <input type="text" name="first_name" required />
-                    </p>
-                    <p>
-                        <label><FontAwesomeIcon icon={faLock} style={styleIconInput} />&nbsp;Parola</label><br/>
-                        <input type="password" name="password" required /><br/>
-                        <Link to="/forget-password"><small className="right-label">Ai uitat parola?</small></Link>
-                    </p>
-                    <p>
-                        <button id="sub_btn" type="submit">Login</button>
-                    </p>
-                </form>
-                <footer>
-                    {/* <p>First time? <Link to="/register">Create an account</Link>.</p> */}
-                    <p><Link to="/"><FontAwesomeIcon icon={faHome} /> Inapoi la pagina principala</Link>.</p>
-                </footer>
-            </div>
-            </FadeIn>
+        <FadeIn>
+        <div className="login-page text-center">
+            <h2>Conecteaza-te</h2>
+            <form action="/home">
+                <p>
+                    <label><FontAwesomeIcon icon={faUser} style={styleIconInput} />&nbsp;Nume de utilizator sau email</label><br/>
+                    <input type="text" name="first_name" required />
+                </p>
+                <p>
+                    <label><FontAwesomeIcon icon={faLock} style={styleIconInput} />&nbsp;Parola</label><br/>
+                    <input type="password" name="password" required /><br/>
+                    <Link to="/forget-password"><small className="right-label">Ai uitat parola?</small></Link>
+                </p>
+                <p>
+                    <button id="sub_btn" type="submit">Login</button>
+                </p>
+            </form>
+            <footer>
+                {/* <p>First time? <Link to="/register">Create an account</Link>.</p> */}
+                <p><Link to="/"><FontAwesomeIcon icon={faHome} /> Inapoi la pagina principala</Link>.</p>
+            </footer>
         </div>
+        </FadeIn>
     )
 }

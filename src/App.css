@@ -19,7 +19,7 @@ body {
     position: relative;
 }
 
-header {
+header.intro-page {
     height: 100vh;
 }
 
@@ -183,6 +183,11 @@ input:focus {
     transition: all .5s
 }
 
+.login-page, .forget-pass-page {
+    height: 100vh;
+    padding-top: 5rem;
+}
+
 .login-page footer p, .login-page footer a, .forget-pass-page footer p, .forget-pass-page footer a {
     font-family: 'Nunito', sans-serif;
     color:#C5FCEE;
@@ -219,9 +224,9 @@ form span {
     font-size: .8rem
 }
 
-#reset_pass_lbl {
+/* #reset_pass_lbl {
     float: left
-}
+} */
 
 /***    Home Page     ***/
 .home-page-title {
@@ -230,11 +235,22 @@ form span {
 
 @media screen and (max-width: 995px) {
     /* header {
-        height: 120vh !important;
+        height: 80vh !important;
     } */
+    .main-title {
+        padding-top: 4rem;
+    }
 
-    .main-title, img.home-img {
-        padding-top: 2rem;
+    img.home-img {
+        padding-top: 5rem;
+    }
+
+    .main-title {
+        font-size: 2.2rem;
+    }
+
+    .main-para {
+        font-size: 1.5rem;
     }
 
     .primary-button {
@@ -245,7 +261,45 @@ form span {
         width: 100%;
     }
 
-    /* .footer {
+    .footer {
         position: static;
-    } */
+    }
+
+    form label {
+        float: none;
+        display: flex;
+        flex-direction: column;
+        font-size: 1rem;
+        margin-bottom: -20px;
+    }
+}
+
+@media screen and (max-height: 601px) {
+    header.intro-page {
+        height: auto !important;
+    }
+
+    .main-title {
+        padding-top: 2rem;
+    }
+
+    img.home-img {
+        padding-top: 3rem;
+    }
+
+    form {
+        padding: 1rem;
+        margin: 0;
+    }
+
+    form label {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-height: 401px) {
+    .login-page, .forget-pass-page {
+        height: auto !important;
+        padding-top: 0;
+    }
 }
