@@ -1,8 +1,11 @@
 import * as React from 'react';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Drawer from '@mui/material/Drawer';
@@ -15,32 +18,30 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 // import Link from '@mui/material/Link';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { navItemsStudent } from '../constants/listItems';
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import DescriptionIcon from '@mui/icons-material/Description';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import './dashboard.css';
 import logoUSV from '../../assets/images/logousv.png';
 import avatarImg from '../../assets/images/avatar.jpg';
+import checkImage from '../../assets/images/check.png';
+import signDefault from '../../assets/images/sign-default.jpg';
 
 const drawerWidth = 240;
 
 const navItems = navItemsStudent;
 const settings = ['Deconecteaza-te'];
 
-DashboardStudent.propTypes = {
+StudentCertificatePaper.propTypes = {
   window: PropTypes.func,
 };
 
-export default function DashboardStudent(props) {
+export default function StudentCertificatePaper(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -109,8 +110,8 @@ export default function DashboardStudent(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
-                <Button key={item.id} sx={{ color: '#fff' }}>
+                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link}>
+                <Button key={item.id} sx={{ color: '#fff' }} >
                   {item.name}
                 </Button>
                 </Link>
@@ -178,53 +179,48 @@ export default function DashboardStudent(props) {
         >
           <Toolbar />
           <div style={{display: 'flex', padding: '0.5rem', alignItems: 'center', justifyContent: 'left'}}>
-          <DashboardIcon style={{fontSize: '4rem', color: 'rgba(197, 252, 238, .8)', marginLeft: '5%' }}/>
-          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem'}}>Meniul principal</Typography>
+          <img src={checkImage} width="50" height="auto" style={{marginRight: '1rem', marginLeft: '5%' }}/>
+          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem'}}>Adeverinta nr. 123</Typography>
           </div>
           <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '90%', margin: '0 auto'}} />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={8} lg={6}> {/* or lg= 6 */}
-              <Link className="dashboard-add-certificate" style={{ textDecoration: "none" }} to="/add-certificate">
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#7D2E00',
-                      textAlign: 'center',
-                      height: 240,
-                    }}
-                    style={{backgroundColor: '#D87816'}}
-                  >
-                    <LibraryAddIcon style={{fontSize: '4rem'}} />
-                    <h1>Creeaza adeverinta</h1>
-                  </Paper>
-                </Link>
-              </Grid>
-              <Grid item xs={12} md={8} lg={6}>
-                <Link className="dashboard-view-certificates" style={{ textDecoration: "none" }} to="/view-certificates">
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#52285F',
-                      textAlign: 'center',
-                      height: 240,
-                    }}
-                    style={{backgroundColor: '#817285'}}
-                  >
-                    <DescriptionIcon style={{fontSize: '4rem'}} />
-                      <h1>Vezi adeverinte</h1>
-                  </Paper>
-                </Link>
-              </Grid>
-            </Grid>
+            <div style={{backgroundColor: '#fff', width: '100%', boxShadow:'2px 4px 10px rgba(74, 74, 74, .8)', padding: '18px'}}>
+                <div style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold'}}>
+                UNIVERSITATEA “STEFAN CEL MARE” DIN SUCEAVA<br/>
+                FACULTATEA DE INGINERIE ELECTRICA SI STIINTA CALCULATOARELOR
+                </div>
+                <div style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', display:'flex', justifyContent: 'flex-end'}}>
+                    Nr. <i>1234</i>&nbsp; / FIESC
+                </div>
+                <div style={{ display:'flex', justifyContent: 'center', padding:'2rem 0'}}>
+                    <h4 style={{textTransform: 'uppercase' }}><b style={{fontFamily: 'Nunito, sans-serif'}}>Adeverinta</b></h4>
+                </div>
+                <p style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', textAlign:'justify', justifyContent: 'center', padding:'0 2rem'}}>
+                    Studentul (a) <i>Popa Andrei</i> este inscris (a) in anul universitar 2022 / 2023 in anul <i>1</i> de studii, program/domeniu de studii - licenta: <i style={{textTransform: 'uppercase'}}>Calculatoare</i>, 
+                    forma de invatamant IF, regim: <i>fara taxa</i>.
+                </p>
+                <br/>
+                <p style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', textAlign:'justify', justifyContent: 'center', padding:'0 2rem'}}>
+                    Adeverinta se elibereaza pentru a-i servi la <i>SERVICIU / LOCUL DE MUNCA etc.. </i>.
+                </p>
+                <div style={{ display:'flex', justifyContent: 'space-between', flexWrap: 'wrap', padding: '5rem 2rem 3rem 2rem'}}>
+                    <div style={{display: 'grid'}}>
+                        <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Decan,</h6>
+                        <h7 style={{fontFamily: 'Nunito, sans-serif'}}>Prof. univ. dr. ing. Laurentiu-Dan Milici</h7>
+                        <img src={signDefault} width="200" height="auto"/>
+                    </div>
+                    <div style={{display: 'grid'}}>
+                        <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Secretar sef,</h6>
+                        <h7 style={{fontFamily: 'Nunito, sans-serif'}}>ing. Elena CURELARU</h7>
+                        <img src={signDefault} width="200" height="auto"/>
+                    </div>
+                    <div style={{display: 'grid'}}>
+                        <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Secretariat,</h6>
+                        <h7 style={{fontFamily: 'Nunito, sans-serif'}}>ec. Laura DOSPINESCU</h7>
+                        <img src={signDefault} width="200" height="auto"/>
+                    </div>
+                </div>
+            </div>
           </Container>
         </Box>
       </Box>

@@ -18,7 +18,7 @@ export default function ForgetPasswordPage() {
         <div className="forget-pass-page text-center">
             <h2>Reseteaza parola</h2>
             <h5>Introdu adresa ta de email si iti vom trimite o noua parola</h5>
-            <form action="/login">
+            <form className="reg-form" action="/login">
                 <p>
                     <label id="reset_pass_lbl"><FontAwesomeIcon icon={faEnvelope} style={styleIconInput} />&nbsp;Adresa de email</label><br/>
                     <input type="email" name="email" required />

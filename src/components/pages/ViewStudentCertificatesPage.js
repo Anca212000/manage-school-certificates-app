@@ -1,8 +1,13 @@
 import * as React from 'react';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
+import MuiAlert from '@mui/material/Alert';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Drawer from '@mui/material/Drawer';
@@ -15,32 +20,31 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 // import Link from '@mui/material/Link';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
-import { navItemsStudent } from '../constants/listItems';
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DescriptionIcon from '@mui/icons-material/Description';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import { navItemsStudent } from '../constants/listItems';
 import './dashboard.css';
 import logoUSV from '../../assets/images/logousv.png';
 import avatarImg from '../../assets/images/avatar.jpg';
+import waitImage from '../../assets/images/waiting-list.png';
+import checkImage from '../../assets/images/check.png';
 
 const drawerWidth = 240;
 
 const navItems = navItemsStudent;
 const settings = ['Deconecteaza-te'];
 
-DashboardStudent.propTypes = {
+ViewStudentCertificates.propTypes = {
   window: PropTypes.func,
 };
 
-export default function DashboardStudent(props) {
+export default function ViewStudentCertificates(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -56,6 +60,27 @@ export default function DashboardStudent(props) {
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+  
+  const card = (
+    <React.Fragment>
+      <CardContent>
+        <Typography variant="h6" component="div" style={{textTransform: 'uppercase', fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', color: '#AFA8BA'}}>
+          Adeverinta nr. 123
+        </Typography>
+        <Typography sx={{ mb: 1.5 }} color="text.secondary" style={{textTransform: 'uppercase', color: '#AFA8BA'}}>
+          Scop
+        </Typography>
+        <Typography variant="body2" style={{fontFamily: 'Nunito, sans-serif', color: '#FFFADE'}}>
+          scopul adeverintei ...
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Link to="/student-certificate">
+            <Button size="small" style={{fontFamily: 'Nunito, sans-serif', color: '#00E2C0', fontWeight: 'bold'}}>Vezi adeverinta <ChevronRightIcon /></Button>
+        </Link>
+      </CardActions>
+    </React.Fragment>
+  );
 
   const drawer = (
     <>
@@ -109,8 +134,8 @@ export default function DashboardStudent(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
-                <Button key={item.id} sx={{ color: '#fff' }}>
+                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link}>
+                <Button key={item.id} sx={{ color: '#fff' }} >
                   {item.name}
                 </Button>
                 </Link>
@@ -178,53 +203,34 @@ export default function DashboardStudent(props) {
         >
           <Toolbar />
           <div style={{display: 'flex', padding: '0.5rem', alignItems: 'center', justifyContent: 'left'}}>
-          <DashboardIcon style={{fontSize: '4rem', color: 'rgba(197, 252, 238, .8)', marginLeft: '5%' }}/>
-          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem'}}>Meniul principal</Typography>
+          <DescriptionIcon style={{fontSize: '4rem', color: 'rgba(197, 252, 238, .8)', marginLeft: '5%' }}/>
+          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem'}}>Vezi adeverinte</Typography>
           </div>
           <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '90%', margin: '0 auto'}} />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={8} lg={6}> {/* or lg= 6 */}
-              <Link className="dashboard-add-certificate" style={{ textDecoration: "none" }} to="/add-certificate">
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#7D2E00',
-                      textAlign: 'center',
-                      height: 240,
-                    }}
-                    style={{backgroundColor: '#D87816'}}
-                  >
-                    <LibraryAddIcon style={{fontSize: '4rem'}} />
-                    <h1>Creeaza adeverinta</h1>
-                  </Paper>
-                </Link>
-              </Grid>
-              <Grid item xs={12} md={8} lg={6}>
-                <Link className="dashboard-view-certificates" style={{ textDecoration: "none" }} to="/view-certificates">
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#52285F',
-                      textAlign: 'center',
-                      height: 240,
-                    }}
-                    style={{backgroundColor: '#817285'}}
-                  >
-                    <DescriptionIcon style={{fontSize: '4rem'}} />
-                      <h1>Vezi adeverinte</h1>
-                  </Paper>
-                </Link>
-              </Grid>
-            </Grid>
+            <Typography variant="h5" style={{fontFamily: 'Nunito, sans-serif', letterSpacing:'1px', textTransform:'uppercase', marginBottom: '1rem'}}>
+                <img src={waitImage} width="50" height="auto" style={{marginRight: '1rem' }}/>
+                In asteptare
+            </Typography>
+            <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+                <Card style={{backgroundColor: '#004A90', width: '350px'}}>{card}</Card>
+                <Card style={{backgroundColor: '#004A90', width: '350px'}}>{card}</Card>
+                <Card style={{backgroundColor: '#004A90', width: '350px'}}>{card}</Card>
+            </div>
+          </Container>
+          <Divider style={{ border: '2px solid rgba(197, 252, 238, .1)', width: '60%', margin: '0 auto'}} />
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Typography variant="h5" style={{fontFamily: 'Nunito, sans-serif', letterSpacing:'1px', textTransform:'uppercase', marginBottom: '1rem'}}>
+                <img src={checkImage} width="50" height="auto" style={{marginRight: '1rem' }}/>
+                Validate
+            </Typography>
+            <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
+                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
+                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
+                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
+                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
+            </div>
           </Container>
         </Box>
       </Box>

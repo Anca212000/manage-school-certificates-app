@@ -20,7 +20,7 @@ export default function SignInPage() {
         <FadeIn>
         <div className="login-page text-center">
             <h2>Conecteaza-te</h2>
-            <form action="/home">
+            <form className="reg-form" action="/">
                 <p>
                     <label><FontAwesomeIcon icon={faUser} style={styleIconInput} />&nbsp;Nume de utilizator sau email</label><br/>
                     <input type="text" name="first_name" required />

@@ -1,6 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Nunito:wght@300&family=Righteous&display=swap');
 /* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Nunito:wght@300&display=swap'); */
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #383838; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #007180; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #06898d; 
+  }
+
 /***    General     ***/
 * {
     box-sizing: border-box;
@@ -81,9 +101,6 @@ img.home-img {
     top: 0;
     right: -20px;
     transition: 0.5s;
-    /* background-color: #00E2C0;
-    padding: 0 6px 3px 6px;
-    border-radius: 50%; */
 }
 
 #reg_btn:hover span {
@@ -108,7 +125,7 @@ h5 {
     color: #C5FCEE;
 }
 
-form {
+form.reg-form {
     display: inline-block;
     background: #FFFADE;
     border: 8px solid #E8D5B5;
@@ -117,7 +134,7 @@ form {
     margin: 2rem 0 1rem 0;
 }
 
-form label {
+form.reg-form label {
     font-family: 'Nunito', sans-serif;
     color: #334A52;
     float: left;
@@ -220,13 +237,9 @@ footer p {
     width: 1rem
 }
 
-form span {
+form.reg-form span {
     font-size: .8rem
 }
-
-/* #reset_pass_lbl {
-    float: left
-} */
 
 /***    Home Page     ***/
 .home-page-title {
@@ -234,9 +247,6 @@ form span {
 }
 
 @media screen and (max-width: 995px) {
-    /* header {
-        height: 80vh !important;
-    } */
     .main-title {
         padding-top: 4rem;
     }
@@ -265,7 +275,7 @@ form span {
         position: static;
     }
 
-    form label {
+    form.reg-form label {
         float: none;
         display: flex;
         flex-direction: column;
@@ -287,12 +297,12 @@ form span {
         padding-top: 3rem;
     }
 
-    form {
+    form.reg-form {
         padding: 1rem;
         margin: 0;
     }
 
-    form label {
+    form.reg-form label {
         font-size: 1rem;
     }
 }
