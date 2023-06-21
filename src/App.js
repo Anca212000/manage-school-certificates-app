@@ -9,6 +9,9 @@ import DashboardStudent from './components/pages/DashboardStudentPage'
 import AddStudentCertificate from './components/pages/AddStudentCertificatePage'
 import ViewStudentCertificates from './components/pages/ViewStudentCertificatesPage'
 import StudentCertificatePaper from './components/pages/StudentCertificatePaperPage'
+import DashboardSecretary from './components/pages/DashboardSecretaryPage'
+import ListStudentCertificates from './components/pages/ListStudentCertificatesPage'
+import ValidateCertificatePaper from './components/pages/ValidateCertificatePaperPage'
 
 import './App.css'
 
@@ -25,6 +28,9 @@ export default function App() {
                     <Route path="/add-certificate" component={ AddStudentCertificate } />
                     <Route path="/view-certificates" component={ ViewStudentCertificates } />
                     <Route path="/student-certificate" component={ StudentCertificatePaper } />
+                    <Route path="/home-secretary" component={ DashboardSecretary } />
+                    <Route path="/view-student-certificates" component={ ListStudentCertificates } />
+                    <Route path="/validate-certificate" component={ ValidateCertificatePaper } />
                 </Switch>
             </div>
         </Router>
