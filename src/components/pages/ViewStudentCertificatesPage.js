@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
@@ -28,8 +28,11 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DescriptionIcon from '@mui/icons-material/Description';
+
+import CardCertifcate from "../cards/CardCertificate";
 import { navItemsStudent } from '../constants/listItems';
 import './dashboard.css';
+
 import logoUSV from '../../assets/images/logousv.png';
 import avatarImg from '../../assets/images/avatar.jpg';
 import waitImage from '../../assets/images/waiting-list.png';
@@ -41,13 +44,67 @@ const navItems = navItemsStudent;
 const settings = ['Deconecteaza-te'];
 
 ViewStudentCertificates.propTypes = {
-  window: PropTypes.func,
+  windowView: PropTypes.func,
 };
 
 export default function ViewStudentCertificates(props) {
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { windowView } = props;
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [emailUser, setEmailUser] = useState('');
+  const [certificatesWait, setCertificatesWait] = useState([]); //array [] for multiple data
+  const [certificatesFinished, setCertificatesFinished] = useState([]);
+  // const [certificate, setCertificate] = useState('');
+
+  const idUser = props.match.params.id;
+  // const idCertificate = props.match.params.idAdv;
+
+  const getUserById = (id) => {
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:8080/users/" + id, requestOptions)
+      .then((response) => response.status === 404 ? window.location.replace('/page-not-found') : response.json())
+      .then((result) => {
+        console.log(result)
+        setEmailUser(result.email)
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const getCertificateByUserEmail = (email) => {
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch(`http://localhost:8080/adeverinte?email=${email}`, requestOptions)
+      .then((response) => response.status === 404 ? window.location.replace('/page-not-found') : response.json())
+      .then((result) => {
+        // setCertificate(result);
+        console.log(result)
+        result.map((adv) => {
+        //   // console.log(adv)
+        if (adv.semnaturaSecSef && adv.semnaturaSec && adv.semnaturaDecan) {
+          setCertificatesFinished(current => [...current, adv]);
+          // setCertificatesFinished(result);
+        }
+        else {
+          setCertificatesWait(current => [...current, adv]);
+          // setCertificatesWait(result);
+        }
+        })
+        // console.log(certificatesWait)
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  useEffect(() => {
+    getUserById(idUser);
+    getCertificateByUserEmail(emailUser);
+  }, [emailUser]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -61,27 +118,6 @@ export default function ViewStudentCertificates(props) {
     setMobileOpen((prevState) => !prevState);
   };
   
-  const card = (
-    <React.Fragment>
-      <CardContent>
-        <Typography variant="h6" component="div" style={{textTransform: 'uppercase', fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', color: '#AFA8BA'}}>
-          Adeverinta nr. 123
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary" style={{textTransform: 'uppercase', color: '#AFA8BA'}}>
-          Scop
-        </Typography>
-        <Typography variant="body2" style={{fontFamily: 'Nunito, sans-serif', color: '#FFFADE'}}>
-          scopul adeverintei ...
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Link to="/student-certificate">
-            <Button size="small" style={{fontFamily: 'Nunito, sans-serif', color: '#00E2C0', fontWeight: 'bold'}}>Vezi adeverinta <ChevronRightIcon /></Button>
-        </Link>
-      </CardActions>
-    </React.Fragment>
-  );
-
   const drawer = (
     <>
     <Typography variant="h6" sx={{ textAlign: 'center', my: 2 }}>
@@ -98,7 +134,7 @@ export default function ViewStudentCertificates(props) {
         {navItems.map(item => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + idUser}>
                 <ListItemText primary={item.iconNav} secondary={item.name} />
               </Link>
             </ListItemButton>
@@ -109,7 +145,7 @@ export default function ViewStudentCertificates(props) {
      </>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container = windowView !== undefined ? () => window().document.body : undefined;
 
   return (
       <Box sx={{ display: 'flex' }}>
@@ -134,7 +170,7 @@ export default function ViewStudentCertificates(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link}>
+                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link + '/' + idUser}>
                 <Button key={item.id} sx={{ color: '#fff' }} >
                   {item.name}
                 </Button>
@@ -207,31 +243,44 @@ export default function ViewStudentCertificates(props) {
           <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem'}}>Vezi adeverinte</Typography>
           </div>
           <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '90%', margin: '0 auto'}} />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Typography variant="h5" style={{fontFamily: 'Nunito, sans-serif', letterSpacing:'1px', textTransform:'uppercase', marginBottom: '1rem'}}>
-                <img src={waitImage} width="50" height="auto" style={{marginRight: '1rem' }}/>
-                In asteptare
+          {/* {!certificatesWait.length && !certificatesFinished.length && (
+            <Typography variant="h5" style={{fontFamily: 'Nunito, sans-serif', letterSpacing:'1px', textTransform:'uppercase', margin: '5%'}}>
+              Nu exista adeverinte adaugate pana in acest moment.
             </Typography>
-            <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-                <Card style={{backgroundColor: '#004A90', width: '350px'}}>{card}</Card>
-                <Card style={{backgroundColor: '#004A90', width: '350px'}}>{card}</Card>
-                <Card style={{backgroundColor: '#004A90', width: '350px'}}>{card}</Card>
-            </div>
-          </Container>
-          <Divider style={{ border: '2px solid rgba(197, 252, 238, .1)', width: '60%', margin: '0 auto'}} />
+          )} */}
+          {certificatesWait.length && ( // certificatesWait.length
+            <>
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Typography variant="h5" style={{fontFamily: 'Nunito, sans-serif', letterSpacing:'1px', textTransform:'uppercase', marginBottom: '1rem'}}>
+                    <img src={waitImage} width="50" height="auto" style={{marginRight: '1rem' }}/>
+                    In asteptare
+                </Typography>
+                <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+                    {certificatesWait.map((adeverinta) => 
+                      <Card style={{backgroundColor: '#004A90', width: '350px'}}>
+                        <CardCertifcate wait={true} dataAdeverinta={adeverinta} />
+                      </Card>
+                    )}
+                </div>
+              </Container>
+              <Divider style={{ border: '2px solid rgba(197, 252, 238, .1)', width: '60%', margin: '0 auto'}} />
+            </>
+          )}
+          {certificatesFinished.length && (
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Typography variant="h5" style={{fontFamily: 'Nunito, sans-serif', letterSpacing:'1px', textTransform:'uppercase', marginBottom: '1rem'}}>
                 <img src={checkImage} width="50" height="auto" style={{marginRight: '1rem' }}/>
                 Validate
             </Typography>
             <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
-                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
-                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
-                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
-                <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>{card}</Card>
+                {certificatesFinished.map((adeverinta) => 
+                  <Card style={{backgroundColor: '#1A3A00', width: '350px'}}>
+                    <CardCertifcate wait={false} dataAdeverinta={adeverinta} />
+                  </Card>
+                )}
             </div>
           </Container>
+          )}
         </Box>
       </Box>
   );

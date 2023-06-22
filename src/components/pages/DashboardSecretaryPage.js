@@ -34,16 +34,37 @@ import avatarImg from '../../assets/images/avatar.jpg';
 const drawerWidth = 240;
 
 const navItems = navItemsSecretary;
-const settings = ['Deconecteaza-te'];
+const settings = [
+  <Link to="/" style={{textDecoration: 'none', fontFamily: 'Nunito, sans-serif', color: 'orange'}}>Deconecteaza-te</Link>
+];
 
 DashboardSecretary.propTypes = {
-  window: PropTypes.func,
+  windowDash: PropTypes.func,
 };
 
 export default function DashboardSecretary(props) {
-  const { window } = props;
+  const { windowDash } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+
+  const id = props.match.params.id;
+
+  const getUserById = (id) => {
+    fetch('http://localhost:8080/users/' + id, { method: "GET"})
+        .then((response) => response.status === 404 ? window.location.replace('/page-not-found') : response.json())
+        .then((result) => {
+            console.log(result);
+            setUser(result);
+            setLoading(false);
+        })
+        .catch((error) => console.log("error", error));
+  }
+
+  React.useEffect(() => {
+    getUserById(id);
+  }, [])
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -66,14 +87,15 @@ export default function DashboardSecretary(props) {
     <Box sx={{ textAlign: 'center', my : 2 }}>
          <Avatar alt="Profile Image" src={avatarImg} sx={{ margin: '0 auto' }} style={{ width: '80px', height: 'auto'}} />
      </Box>
-     <Typography variant="h7" sx={{ textAlign: 'center', fontFamily: 'Nunito, sans-serif', color: '#c5fcee' }}>Hello !</Typography>
+     <Typography variant="h7" sx={{ textAlign: 'center', fontFamily: 'Nunito, sans-serif', color: '#c5fcee' }}>Buna, {user && user.nume + ' ' + user.prenume} !</Typography>
+     <Typography variant="h7" sx={{ textAlign: 'center', textTransform: 'uppercase', fontFamily: 'Nunito, sans-serif', color: '#c5fcee' }}>{user && user.facultate}</Typography>
      <Divider />
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <List>
         {navItems.map(item => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + id}>
                 <ListItemText primary={item.iconNav} secondary={item.name} />
               </Link>
             </ListItemButton>
@@ -84,8 +106,23 @@ export default function DashboardSecretary(props) {
      </>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
-
+  const container = windowDash !== undefined ? () => window().document.body : undefined;
+  
+  if(loading) {
+    return (
+      <h1 style={{
+        margin:'0 auto', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        textAlign: 'center', 
+        height: '100vh', 
+        paddingTop: '16%', 
+        fontFamily:'Righteous, cursive', 
+        color: 'white'}}
+      >Se incarca pagina ...
+      </h1>
+    );
+  } else {
   return (
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -109,7 +146,7 @@ export default function DashboardSecretary(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + id}>
                 <Button key={item.id} sx={{ color: '#fff' }}>
                   {item.name}
                 </Button>
@@ -138,6 +175,9 @@ export default function DashboardSecretary(props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <Typography textAlign="center">{user && user.nume + ' ' + user.prenume}</Typography>
+              <Typography textAlign="center" style={{textTransform: 'uppercase'}}>{user && user.facultate}</Typography>
+              <br/>
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
@@ -182,10 +222,13 @@ export default function DashboardSecretary(props) {
           <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem'}}>Meniul principal</Typography>
           </div>
           <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '90%', margin: '0 auto'}} />
+          <Typography variant="h5" style={{fontFamily: 'Righteous, cursive', textTransform:'capitalize', letterSpacing:'1px', color: 'rgba(197, 252, 238, .8)', marginLeft: '5%'}}>
+            Bine ai venit, Dna/Dl {user && user.rol + ' ' + user.prenume} !
+          </Typography>
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
-              <Grid item xs={12} md={8} lg={6}> {/* or lg= 6 */}
-              <Link className="dashboard-view-student-certificates" style={{ textDecoration: "none" }} to="/view-student-certificates">
+              <Grid item xs={12} md={8} lg={12}>
+              <Link className="dashboard-view-student-certificates" style={{ textDecoration: "none" }} to={`/view-student-certificates/${id}`}>
                   <Paper
                     sx={{
                       p: 2,
@@ -200,12 +243,12 @@ export default function DashboardSecretary(props) {
                     style={{backgroundColor: '#FFF7D6'}}
                   >
                     <PageviewIcon style={{fontSize: '4rem'}} />
-                    <h1>Adeverinte studenti</h1>
+                    <h1>Vezi adeverintele studentilor</h1>
                   </Paper>
                 </Link>
               </Grid>
-              <Grid item xs={12} md={8} lg={6}>
-                <Link className="dashboard-sign-certificates" style={{ textDecoration: "none" }} to="/sign-certificates">
+              {/* <Grid item xs={12} md={8} lg={6}>
+                <Link className="dashboard-sign-certificates" style={{ textDecoration: "none" }} to={`/sign-certificates/${id}`}>
                   <Paper
                     sx={{
                       p: 2,
@@ -223,10 +266,11 @@ export default function DashboardSecretary(props) {
                       <h1>Semneaza adeverintele</h1>
                   </Paper>
                 </Link>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Container>
         </Box>
       </Box>
-  );
+    );
+  }
 }

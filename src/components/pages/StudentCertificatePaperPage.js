@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
@@ -45,6 +45,37 @@ export default function StudentCertificatePaper(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user, setUser] = React.useState('');
+  const [purposeAdv, setPurposeAdv] = React.useState('');
+
+  const idPaper = props.match.params.idAdv;
+
+  const getCertificateById = (idPaper) => {
+    fetch("http://localhost:8080/adeverinte/" + idPaper, { method: "GET"})
+        .then((response) => response.json())
+        .then((result) => {
+            // console.log(result)
+            setPurposeAdv(result);
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  const getUserByEmail = (email) => {
+    fetch(`http://localhost:8080/users?email=${email}`, { method: "GET"})
+        .then((response) => response.json())
+        .then((result) => {
+            // console.log(result)
+            if (result.length) {
+                setUser(result[0]);
+            }
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  useEffect(() => {
+      getCertificateById(idPaper);
+      getUserByEmail(purposeAdv.email);
+  }, [purposeAdv]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -74,7 +105,7 @@ export default function StudentCertificatePaper(props) {
         {navItems.map(item => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + user.id}>
                 <ListItemText primary={item.iconNav} secondary={item.name} />
               </Link>
             </ListItemButton>
@@ -110,7 +141,7 @@ export default function StudentCertificatePaper(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link}>
+                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link + '/' + user.id}>
                 <Button key={item.id} sx={{ color: '#fff' }} >
                   {item.name}
                 </Button>
@@ -179,8 +210,8 @@ export default function StudentCertificatePaper(props) {
         >
           <Toolbar />
           <div style={{display: 'flex', padding: '0.5rem', alignItems: 'center', justifyContent: 'left'}}>
-          <img src={checkImage} width="50" height="auto" style={{marginRight: '1rem', marginLeft: '5%' }}/>
-          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem'}}>Adeverinta nr. 123</Typography>
+          {/* <img src={checkImage} width="50" height="auto" style={{marginRight: '1rem', marginLeft: '5%' }}/> */}
+          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '5%'}}>Detalii adeverinta:</Typography>
           </div>
           <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '90%', margin: '0 auto'}} />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -190,34 +221,34 @@ export default function StudentCertificatePaper(props) {
                 FACULTATEA DE INGINERIE ELECTRICA SI STIINTA CALCULATOARELOR
                 </div>
                 <div style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', display:'flex', justifyContent: 'flex-end'}}>
-                    Nr. <i>1234</i>&nbsp; / FIESC
+                    Nr. <i>{user && user.nrMatricol}</i>&nbsp; / {user && user.facultate.toUpperCase()}
                 </div>
                 <div style={{ display:'flex', justifyContent: 'center', padding:'2rem 0'}}>
                     <h4 style={{textTransform: 'uppercase' }}><b style={{fontFamily: 'Nunito, sans-serif'}}>Adeverinta</b></h4>
                 </div>
                 <p style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', textAlign:'justify', justifyContent: 'center', padding:'0 2rem'}}>
-                    Studentul (a) <i>Popa Andrei</i> este inscris (a) in anul universitar 2022 / 2023 in anul <i>1</i> de studii, program/domeniu de studii - licenta: <i style={{textTransform: 'uppercase'}}>Calculatoare</i>, 
-                    forma de invatamant IF, regim: <i>fara taxa</i>.
+                    Studentul (a) <i>{user && user.nume + ' ' + user.prenume}</i> este inscris (a) in anul universitar 2022 / 2023 in anul <i>{user && user.anStudiu}</i> de studii, program/domeniu de studii - {user && user.tipProgramStudiu}: <i style={{textTransform: 'uppercase'}}>{user && user.domeniuStudiu}</i>, 
+                    forma de invatamant {user && user.formaInvatamant}, regim: <i>{user && user.regim}</i>.
                 </p>
                 <br/>
                 <p style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', textAlign:'justify', justifyContent: 'center', padding:'0 2rem'}}>
-                    Adeverinta se elibereaza pentru a-i servi la <i>SERVICIU / LOCUL DE MUNCA etc.. </i>.
+                    Adeverinta se elibereaza pentru a-i servi la <i style={{textTransform: 'uppercase'}}>{purposeAdv && purposeAdv.motiv}</i>.
                 </p>
                 <div style={{ display:'flex', justifyContent: 'space-between', flexWrap: 'wrap', padding: '5rem 2rem 3rem 2rem'}}>
                     <div style={{display: 'grid'}}>
                         <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Decan,</h6>
                         <h7 style={{fontFamily: 'Nunito, sans-serif'}}>Prof. univ. dr. ing. Laurentiu-Dan Milici</h7>
-                        <img src={signDefault} width="200" height="auto"/>
+                        {purposeAdv && purposeAdv.semnaturaDecan && <img src={signDefault} width="200" height="auto"/> }
                     </div>
                     <div style={{display: 'grid'}}>
                         <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Secretar sef,</h6>
                         <h7 style={{fontFamily: 'Nunito, sans-serif'}}>ing. Elena CURELARU</h7>
-                        <img src={signDefault} width="200" height="auto"/>
+                        {purposeAdv && purposeAdv.semnaturaSecSef && <img src={signDefault} width="200" height="auto"/>}
                     </div>
                     <div style={{display: 'grid'}}>
                         <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Secretariat,</h6>
                         <h7 style={{fontFamily: 'Nunito, sans-serif'}}>ec. Laura DOSPINESCU</h7>
-                        <img src={signDefault} width="200" height="auto"/>
+                        {purposeAdv && purposeAdv.semnaturaSec && <img src={signDefault} width="200" height="auto"/>}
                     </div>
                 </div>
             </div>

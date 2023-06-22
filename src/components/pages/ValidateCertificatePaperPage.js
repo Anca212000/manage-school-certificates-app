@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
@@ -52,7 +52,7 @@ const navItems = navItemsSecretary;
 const settings = ['Deconecteaza-te'];
 
 ValidateCertificatePaper.propTypes = {
-  window: PropTypes.func,
+  windowPage: PropTypes.func,
 };
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -60,7 +60,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function ValidateCertificatePaper(props) {
-  const { window } = props;
+  const { windowPage } = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -69,6 +69,72 @@ export default function ValidateCertificatePaper(props) {
   const [validatePaper, setValidatePaper] = React.useState(null);
   const [openAlert, setOpenAlert] = React.useState(false);
   const [alertType, setAlertType] = React.useState({type: '', content: ''});
+  const [user, setUser] = React.useState('');
+  const [secretary, setSecretary] = React.useState('');
+  const [certificateStudent, setCertificateStudent] = React.useState('');
+
+  const id = props.match.params.id;
+  const idPaper = props.match.params.idAdv;
+
+  const getSecretaryUserById = (id) => {
+    fetch("http://localhost:8080/users/" + id, { method: "GET"})
+        .then((response) => response.json())
+        .then((result) => {
+            // console.log(result)
+            setSecretary(result);
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  const getCertificateById = (idPaper) => {
+    fetch("http://localhost:8080/adeverinte/" + idPaper, { method: "GET"})
+        .then((response) => response.status === 404 ? window.location.replace('/page-not-found') : response.json())
+        .then((result) => {
+            // console.log(result)
+            setCertificateStudent(result);
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  const getUserByEmail = (email) => {
+    fetch(`http://localhost:8080/users?email=${email}`, { method: "GET"})
+        .then((response) => response.json())
+        .then((result) => {
+            // console.log(result)
+            if (result.length) {
+                setUser(result[0]);
+            }
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  const updateCertificateById = (id, updatedData) => {
+    fetch('http://localhost:8080/adeverinte/' + id, { method: "PUT", body: JSON.stringify(updatedData), headers: new Headers({
+            'Content-Type': 'application/json; charset=UTF-8'
+          })
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            console.log(result)
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  const deleteCertificateById = (id) => {
+    fetch('http://localhost:8080/adeverinte/' + id, { method: "DELETE"})
+        .then((response) => window.location.replace('/view-student-certificates/' + id))
+        .then((result) => {
+          // window.location.replace('/view-student-certificates/' + id)
+            // console.log(result)
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  useEffect(() => {
+      getSecretaryUserById(id);
+      getCertificateById(idPaper);
+      getUserByEmail(certificateStudent.email);
+  }, [certificateStudent]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -96,7 +162,47 @@ export default function ValidateCertificatePaper(props) {
 
   const handleCloseDialogContinue = () => {
     setOpenDialog(false);
-    const messAlert = validatePaper ? 'Adeverinta a fost validata cu succes ! Urmeaza a fi semnata.' : 'Adeverinta a fost refuzata ! Nu va mai fi valabila din acest moment.';
+
+    if(validatePaper) {
+      var signD, signSS, signS;
+
+      if (secretary.rol === 'decan') {
+        signD = true
+        signSS = certificateStudent.semnaturaSecSef
+        signS = certificateStudent.semnaturaSec
+      }
+      else if (secretary.rol === 'secretarSef') {
+        signD = certificateStudent.semnaturaDecan
+        signSS = true
+        signS = certificateStudent.semnaturaSec
+      } else if (secretary.rol === 'secretar') {
+        signD = certificateStudent.semnaturaDecan
+        signSS = certificateStudent.semnaturaSecSef
+        signS = true
+      }
+
+      console.log('secretary: ');
+      console.log(secretary);
+      console.log('certificateStudent: ');
+      console.log(certificateStudent);
+
+      const updatedSigns = {
+        email: user.email,
+        motiv: certificateStudent.motiv,
+        semnaturaSecSef: signSS,
+        semnaturaSec: signS,
+        semnaturaDecan: signD
+      };
+      console.log(updatedSigns)
+
+      updateCertificateById(idPaper, updatedSigns);
+    }
+    else {
+      deleteCertificateById(idPaper);
+      window.location.replace('/view-student-certificates/' + id)
+    }
+
+    const messAlert = validatePaper ? 'Adeverinta a fost validata si semnata cu succes !' : 'Adeverinta a fost refuzata ! Nu va mai fi valabila din acest moment.';
     setAlertType({
         type: 'success',
         content: messAlert
@@ -172,7 +278,7 @@ export default function ValidateCertificatePaper(props) {
         {navItems.map(item => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + id}>
                 <ListItemText primary={item.iconNav} secondary={item.name} />
               </Link>
             </ListItemButton>
@@ -182,8 +288,27 @@ export default function ValidateCertificatePaper(props) {
     </Box>
      </>
   );
+  
+  const buttonAccept = (
+    (!certificateStudent.semnaturaDecan && !certificateStudent.semnaturaSecSef && !certificateStudent.semnaturaSec &&
+      (<Button className="accept-button" startIcon={<img src={checkImg} width="28" height="28" />} variant="contained" color="secondary" onClick={acceptCertificate} style={{ textTransform: 'uppercase', fontFamily: 'Righteous, cursive', fontSize: '20px', letterSpacing: '1px', color: '#194200', backgroundColor: '#70B400', border:'4px solid #194200', borderRadius: '40px'}}>
+          Semneaza
+      </Button>)) ||
+    (secretary.rol === 'decan' && !certificateStudent.semnaturaDecan && 
+      (<Button className="accept-button" startIcon={<img src={checkImg} width="28" height="28" />} variant="contained" color="secondary" onClick={acceptCertificate} style={{ textTransform: 'uppercase', fontFamily: 'Righteous, cursive', fontSize: '20px', letterSpacing: '1px', color: '#194200', backgroundColor: '#70B400', border:'4px solid #194200', borderRadius: '40px'}}>
+          Semneaza
+      </Button>) || 
+    secretary.rol === 'secretarSef' && !certificateStudent.semnaturaSecSef && 
+      (<Button className="accept-button" startIcon={<img src={checkImg} width="28" height="28" />} variant="contained" color="secondary" onClick={acceptCertificate} style={{ textTransform: 'uppercase', fontFamily: 'Righteous, cursive', fontSize: '20px', letterSpacing: '1px', color: '#194200', backgroundColor: '#70B400', border:'4px solid #194200', borderRadius: '40px'}}>
+          Semneaza
+      </Button>) ||
+    secretary.rol === 'secretar' && !certificateStudent.semnaturaSec &&
+      (<Button className="accept-button" startIcon={<img src={checkImg} width="28" height="28" />} variant="contained" color="secondary" onClick={acceptCertificate} style={{ textTransform: 'uppercase', fontFamily: 'Righteous, cursive', fontSize: '20px', letterSpacing: '1px', color: '#194200', backgroundColor: '#70B400', border:'4px solid #194200', borderRadius: '40px'}}>
+          Semneaza
+      </Button>))
+  );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container = windowPage !== undefined ? () => window().document.body : undefined;
 
   return (
       <Box sx={{ display: 'flex' }}>
@@ -208,7 +333,7 @@ export default function ValidateCertificatePaper(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + id}>
                 <Button key={item.id} sx={{ color: '#fff' }}>
                   {item.name}
                 </Button>
@@ -279,58 +404,57 @@ export default function ValidateCertificatePaper(props) {
           {alertType ? alertMessage : ''}
           <div style={{display: 'flex', padding: '0.5rem', alignItems: 'center', justifyContent: 'left'}}>
           <SchoolIcon style={{fontSize: '4rem', color: 'rgba(197, 252, 238, .8)', marginLeft: '5%' }}/>
-          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem', display: 'flex', flexWrap: 'wrap'}}>Popa Andrei Marian,&nbsp;
-          <span style={{fontFamily: 'Righteous, cursive', textTransform: 'uppercase'}}>Calculatoare</span>
+          <Typography variant="h3" style={{fontFamily: 'Righteous, cursive', color: 'rgba(197, 252, 238, .8)', marginLeft: '0.5rem', display: 'flex', flexWrap: 'wrap'}}>{user && user.nume + ' ' + user.prenume},&nbsp;
+          <span style={{fontFamily: 'Righteous, cursive', textTransform: 'capitalize'}}>{user && user.domeniuStudiu}</span>
           </Typography>
           </div>
           <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '90%', margin: '0 auto'}} />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <div style={{backgroundColor: '#fff', width: '100%', boxShadow:'2px 4px 10px rgba(74, 74, 74, .8)', padding: '18px', margin: '0 0 20px 0'}}>
+            <div style={{backgroundColor: '#fff', width: '100%', boxShadow:'2px 4px 10px rgba(74, 74, 74, .8)', padding: '18px', marginBottom: '20px'}}>
                 <div style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold'}}>
                 UNIVERSITATEA “STEFAN CEL MARE” DIN SUCEAVA<br/>
                 FACULTATEA DE INGINERIE ELECTRICA SI STIINTA CALCULATOARELOR
                 </div>
                 <div style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', display:'flex', justifyContent: 'flex-end'}}>
-                    Nr. <i>1234</i>&nbsp; / FIESC
+                    Nr. <i>{user && user.nrMatricol}</i>&nbsp; / {user && user.facultate.toUpperCase()}
                 </div>
                 <div style={{ display:'flex', justifyContent: 'center', padding:'2rem 0'}}>
                     <h4 style={{textTransform: 'uppercase' }}><b style={{fontFamily: 'Nunito, sans-serif'}}>Adeverinta</b></h4>
                 </div>
                 <p style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', textAlign:'justify', justifyContent: 'center', padding:'0 2rem'}}>
-                    Studentul (a) <i>Popa Andrei</i> este inscris (a) in anul universitar 2022 / 2023 in anul <i>1</i> de studii, program/domeniu de studii - licenta: <i style={{textTransform: 'uppercase'}}>Calculatoare</i>, 
-                    forma de invatamant IF, regim: <i>fara taxa</i>.
+                    Studentul (a) <i>{user && user.nume + ' ' + user.prenume}</i> este inscris (a) in anul universitar 2022 / 2023 in anul <i>{user && user.anStudiu}</i> de studii, program/domeniu de studii - {user && user.tipProgramStudiu}: <i style={{textTransform: 'uppercase'}}>{user && user.domeniuStudiu}</i>, 
+                    forma de invatamant {user && user.formaInvatamant}, regim: <i>{user && user.regim}</i>.
                 </p>
                 <br/>
                 <p style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', textAlign:'justify', justifyContent: 'center', padding:'0 2rem'}}>
-                    Adeverinta se elibereaza pentru a-i servi la <i>SERVICIU / LOCUL DE MUNCA etc.. </i>.
+                    Adeverinta se elibereaza pentru a-i servi la <i style={{textTransform: 'uppercase'}}>{certificateStudent && certificateStudent.motiv}</i>.
                 </p>
                 <div style={{ display:'flex', justifyContent: 'space-between', flexWrap: 'wrap', padding: '5rem 2rem 3rem 2rem'}}>
                     <div style={{display: 'grid'}}>
                         <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Decan,</h6>
                         <h7 style={{fontFamily: 'Nunito, sans-serif'}}>Prof. univ. dr. ing. Laurentiu-Dan Milici</h7>
-                        {/* <img src={signDefault} width="200" height="auto"/> */}
+                        {certificateStudent && certificateStudent.semnaturaDecan && <img src={signDefault} width="200" height="auto"/> }
                     </div>
                     <div style={{display: 'grid'}}>
                         <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Secretar sef,</h6>
                         <h7 style={{fontFamily: 'Nunito, sans-serif'}}>ing. Elena CURELARU</h7>
-                        {/* <img src={signDefault} width="200" height="auto"/> */}
+                        {certificateStudent && certificateStudent.semnaturaSecSef && <img src={signDefault} width="200" height="auto"/>}
                     </div>
                     <div style={{display: 'grid'}}>
                         <h6 style={{fontFamily: 'Nunito, sans-serif', textTransform: 'uppercase', fontWeight: 'bold' }}>Secretariat,</h6>
                         <h7 style={{fontFamily: 'Nunito, sans-serif'}}>ec. Laura DOSPINESCU</h7>
-                        {/* <img src={signDefault} width="200" height="auto"/> */}
+                        {certificateStudent && certificateStudent.semnaturaSec && <img src={signDefault} width="200" height="auto"/>}
                     </div>
                 </div>
             </div>
-          <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '80%', margin: '0 auto'}} />
-          <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '15px', margin: '20px 0'}}>
-            <Button className="accept-button" startIcon={<img src={checkImg} width="28" height="28" />} variant="contained" color="secondary" onClick={acceptCertificate} style={{ textTransform: 'uppercase', fontFamily: 'Righteous, cursive', fontSize: '20px', letterSpacing: '1px', color: '#194200', backgroundColor: '#70B400', border:'4px solid #194200', borderRadius: '40px'}}>
-                Accepta
-            </Button>
-            <Button className="dismiss-button" startIcon={<img src={dismissImg} width="28" height="28" />} variant="contained" color="secondary" onClick={refuseCertificate} style={{ textTransform: 'uppercase', fontFamily: 'Righteous, cursive', fontSize: '20px', letterSpacing: '1px', color: '#FFF', backgroundColor: '#630000', border:'4px solid #B60000', borderRadius: '40px'}}>
-                Refuza
-            </Button>
-          </div>
+            <Divider style={{ border: '3px solid rgba(197, 252, 238, .1)', width: '80%', margin: '0 auto'}} />
+            <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '15px', margin: '20px 0'}}>
+              {buttonAccept}
+              {!certificateStudent.semnaturaDecan && !certificateStudent.semnaturaSecSef && !certificateStudent.semnaturaSec &&
+              <Button className="dismiss-button" startIcon={<img src={dismissImg} width="28" height="28" />} variant="contained" color="secondary" onClick={refuseCertificate} style={{ textTransform: 'uppercase', fontFamily: 'Righteous, cursive', fontSize: '20px', letterSpacing: '1px', color: '#FFF', backgroundColor: '#630000', border:'4px solid #B60000', borderRadius: '40px'}}>
+                  Refuza
+              </Button>}
+            </div>
             {dialog}
           </Container>
         </Box>

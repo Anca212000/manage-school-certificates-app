@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -46,6 +46,28 @@ export default function ListStudentCertificates(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [certificates, setCertificates] = React.useState(null);
+
+  const id = props.match.params.id;
+
+  const getAllStudentsCertificates = () => {
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch('http://localhost:8080/adeverinte/', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setCertificates(result);
+        console.log(result)
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  useEffect(() => {
+    getAllStudentsCertificates();
+  }, []);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -75,7 +97,7 @@ export default function ListStudentCertificates(props) {
         {navItems.map(item => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + id}>
                 <ListItemText primary={item.iconNav} secondary={item.name} />
               </Link>
             </ListItemButton>
@@ -111,7 +133,7 @@ export default function ListStudentCertificates(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + id}>
                 <Button key={item.id} sx={{ color: '#fff' }}>
                   {item.name}
                 </Button>
@@ -190,9 +212,10 @@ export default function ListStudentCertificates(props) {
             </Typography>
             <Grid item xs={12} md={6} sx = {{ mt : 2 }}>
                 <List>
+                  {certificates && certificates.map((item) => 
                     <ListItem
                     secondaryAction={
-                        <Link to='/validate-certificate'>
+                        <Link to={`/validate-certificate/${id}/${item.id}`}>
                             <IconButton edge="end" aria-label="delete" size="small" style={{
                                 backgroundColor: '#8A7260',
                                 borderRadius:'5px',
@@ -221,60 +244,19 @@ export default function ListStudentCertificates(props) {
                     <div className="list-content">
                         <ListItemText
                             className="list-item-certificates"
-                            primary="Popa Andrei"
-                            secondary="Motiv: There are many variations of passages of Lorem Ipsum available ..."
+                            primary={"Motiv: " + item.motiv}
+                            // secondary={item.email}
                             sx = {{ pr : 2 }}
                         />
                         <ListItemText
                             className="list-item-certificates"
-                            primary="Calculatoare"
-                            // secondary='Secondary text'
+                            // primary="Calculatoare"
+                            secondary={item.email}
                             sx = {{ pr : 2 }}
                         />
                     </div>
                     </ListItem>
-                    <ListItem
-                    secondaryAction={
-                        <Link to='/home-secretary'>
-                            <IconButton edge="end" aria-label="delete" size="small" style={{
-                                backgroundColor: '#8A7260',
-                                borderRadius:'5px',
-                                color: '#FFF'}}
-                                >
-                                <Typography style={{fontFamily: 'Nunito, sans-serif', fontWeight: 'bold', letterSpacing:'1px', textTransform:'uppercase'}}>
-                                    Vezi detalii
-                                </Typography>
-                                <ChevronRightIcon />
-                            </IconButton>
-                        </Link>
-                    }
-                    style={{
-                        backgroundColor: '#584232',
-                        border: '3px solid #8A7260',
-                        borderRadius: '10px',
-                        boxShadow: '3px 4px 8px #1A3139',
-                    }}
-                    >
-                    <ListItemAvatar>
-                        <Avatar style={{ backgroundColor: '#8A7260'}}>
-                        <TextSnippetIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <div className="list-content">
-                        <ListItemText
-                            className="list-item-certificates"
-                            primary="Popa Andrei"
-                            secondary="Motiv: There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour"
-                            sx = {{ pr : 2 }}
-                        />
-                        <ListItemText
-                            className="list-item-certificates"
-                            primary="Calculatoare"
-                            // secondary='Secondary text'
-                            sx = {{ pr : 2 }}
-                        />
-                    </div>
-                    </ListItem>
+                    )}
                 </List>
             </Grid>
           </Container>

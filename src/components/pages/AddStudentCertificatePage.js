@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import Snackbar from '@mui/material/Snackbar';
@@ -51,12 +51,51 @@ export default function AddStudentCertificate(props) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [purposeAdv, setPurposeAdv] = React.useState('');
   const [openAlert, setOpenAlert] = React.useState(false);
+  const [emailUser, setEmailUser] = React.useState('');
+
+  const idUser = props.match.params.id;
 
   const defaultAlert = { 
     type: 'success', 
     content: 'Adeverinta a fost creata cu succes! Asteapta confirmarea de la secretariat penntru validitatea ei.'
     }
   const [alertType, setAlertType] = React.useState(defaultAlert);
+
+  const getEmailByUserId = (id) => {
+    fetch('http://localhost:8080/users/' + id, { method: "GET" })
+        .then((response) => response.json())
+        .then((result) => {
+            console.log(result)
+            setEmailUser(result.email);
+        })
+        .catch((error) => console.log("error", error));
+  };
+
+  const createStudentCertificate = (sendData) => {
+    fetch("http://localhost:8080/adeverinte/", { method: "POST", body: JSON.stringify(sendData), headers: new Headers({
+            'Content-Type': 'application/json; charset=UTF-8'
+          })
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            console.log(result)
+            setPurposeAdv('')
+            setOpenAlert(true)
+            setAlertType(defaultAlert)
+        })
+        .catch((error) => {
+          console.log("error", error)
+          setOpenAlert(true)
+          setAlertType({
+            type: "error",
+            content: error
+          })
+        });
+  };
+
+  useEffect(() => {
+      getEmailByUserId(idUser);
+  }, [emailUser]);
 
   const handleClick = () => {
     setOpenAlert(true);
@@ -84,6 +123,15 @@ export default function AddStudentCertificate(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     // console.log('Data: ' + purposeAdv);
+    const newCertificate = {
+      email: emailUser,
+      motiv: purposeAdv,
+      semnaturaSecSef: false,
+      semnaturaSec: false,
+      semnaturaDecan: false
+    }
+
+    createStudentCertificate(newCertificate);
   }
 
   const vertical = 'top';
@@ -117,7 +165,7 @@ export default function AddStudentCertificate(props) {
         {navItems.map(item => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link}>
+              <Link style={{ textDecoration: "none", textAlign: 'center' }} to={item.link + '/' + idUser}>
                 <ListItemText primary={item.iconNav} secondary={item.name} />
               </Link>
             </ListItemButton>
@@ -153,7 +201,7 @@ export default function AddStudentCertificate(props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link}>
+                <Link style={{ textDecoration: "none", textAlign: 'center'}} to={item.link + '/' + idUser}>
                 <Button key={item.id} sx={{ color: '#fff' }} >
                   {item.name}
                 </Button>

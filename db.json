@@ -1,0 +1,126 @@
+{
+  "users": [
+    {
+      "id": 0,
+      "email": "decan@usm.ro",
+      "nume": "Milici",
+      "prenume": "Laurentiu-Dan",
+      "facultate": "fiesc",
+      "formaInvatamant": null,
+      "tipProgramStudiu": null,
+      "domeniuStudiu": null,
+      "anStudiu": null,
+      "regim": null,
+      "nrMatricol": null,
+      "semnatura": false,
+      "idAdeverinta": null,
+      "rol": "decan"
+    },
+    {
+      "id": 1,
+      "email": "elena@usm.ro",
+      "nume": "Curelaru",
+      "prenume": "Elena",
+      "facultate": "fiesc",
+      "formaInvatamant": null,
+      "tipProgramStudiu": null,
+      "domeniuStudiu": null,
+      "anStudiu": null,
+      "regim": null,
+      "nrMatricol": null,
+      "semnatura": false,
+      "idAdeverinta": null,
+      "rol": "secretarSef"
+    },
+    {
+      "id": 2,
+      "email": "laura@usm.ro",
+      "nume": "Dospinescu",
+      "prenume": "Laura",
+      "facultate": "fiesc",
+      "formaInvatamant": null,
+      "tipProgramStudiu": null,
+      "domeniuStudiu": null,
+      "anStudiu": null,
+      "regim": null,
+      "nrMatricol": null,
+      "semnatura": false,
+      "idAdeverinta": null,
+      "rol": "secretar"
+    },
+    {
+      "id": 3,
+      "email": "paul@student.usv.ro",
+      "nume": "Gherasim",
+      "prenume": "Paul",
+      "facultate": "fiesc",
+      "formaInvatamant": "zi",
+      "tipProgramStudiu": "master",
+      "domeniuStudiu": "Stiinta si ingineria calculatoarelor",
+      "anStudiu": 1,
+      "regim": "fara taxa",
+      "nrMatricol": "378918",
+      "semnatura": false,
+      "idAdeverinta": 0,
+      "rol": "student"
+    },
+    {
+      "id": 4,
+      "email": "anca@student.usv.ro",
+      "nume": "Prodan",
+      "prenume": "Anca",
+      "facultate": "fiesc",
+      "formaInvatamant": "zi",
+      "tipProgramStudiu": "master",
+      "domeniuStudiu": "Stiinta si ingineria calculatoarelor",
+      "anStudiu": 1,
+      "regim": "fara taxa",
+      "nrMatricol": "70101",
+      "semnatura": false,
+      "idAdeverinta": 1,
+      "rol": "student"
+    }
+  ],
+  "adeverinte": [
+    {
+      "email": "paul@student.usv.ro",
+      "motiv": "doctor",
+      "semnaturaSecSef": true,
+      "semnaturaSec": true,
+      "semnaturaDecan": true,
+      "id": 0
+    },
+    {
+      "email": "anca@student.usv.ro",
+      "motiv": "serviciu",
+      "semnaturaSecSef": true,
+      "semnaturaSec": true,
+      "semnaturaDecan": true,
+      "id": 1
+    },
+    {
+      "email": "anca@student.usv.ro",
+      "motiv": "transport public TPL",
+      "semnaturaSecSef": true,
+      "semnaturaSec": true,
+      "semnaturaDecan": true,
+      "id": 2
+    },
+    {
+      "id": 3,
+      "email": "anca@student.usv.ro",
+      "motiv": "medic familie",
+      "semnaturaSecSef": true,
+      "semnaturaSec": true,
+      "semnaturaDecan": true
+    },
+    {
+      "email": "paul@student.usv.ro",
+      "motiv": "mers la mare",
+      "semnaturaSecSef": false,
+      "semnaturaSec": false,
+      "semnaturaDecan": false,
+      "id": 4
+    }
+  ]
+}

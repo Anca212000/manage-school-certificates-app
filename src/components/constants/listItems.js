@@ -39,10 +39,10 @@ export const navItemsSecretary = [
     iconNav: <PageviewIcon />,
     link: '/view-student-certificates'
   },
-  {
-    id: 2,
-    name: 'Semneaza',
-    iconNav: <DriveFileRenameOutlineIcon />,
-    link: '/sign-certificates'
-  }
+  // {
+  //   id: 2,
+  //   name: 'Semneaza',
+  //   iconNav: <DriveFileRenameOutlineIcon />,
+  //   link: '/sign-certificates'
+  // }
 ];
