@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { Route, Routes , Link } from 'react-router-dom'
 
 import LandingPage from './components/pages/LandingPage'
 import LoginPage from './components/pages/LoginPage'
@@ -18,23 +18,21 @@ import './App.css'
 
 export default function App() {
     return (
-        <Router>
-            <div>
-                <Switch>
-                    <Route exact path="/" component={ LandingPage } />
-                    <Route path="/login" component={ LoginPage } />
-                    {/* <Route path="/register" component={ RegisterPage } /> */}
-                    <Route path="/forget-password" component={ ForgetPasswordPage } />
-                    <Route path="/home-student/:id" component={ DashboardStudent } />
-                    <Route path="/add-certificate/:id" component={ AddStudentCertificate } />
-                    <Route path="/view-certificates/:id" component={ ViewStudentCertificates } />
-                    <Route path="/student-certificate/:idAdv" component={ StudentCertificatePaper } />
-                    <Route path="/home-secretary/:id" component={ DashboardSecretary } />
-                    <Route path="/view-student-certificates/:id" component={ ListStudentCertificates } />
-                    <Route path="/validate-certificate/:id/:idAdv" component={ ValidateCertificatePaper } />
-                    <Route exact path="/page-not-found" component={ PageNotFound } />
-                </Switch>
-            </div>
-        </Router>
+        <div>
+            <Routes>
+                <Route exact path="/" component={ LandingPage } />
+                <Route path="/login" component={ LoginPage } />
+                {/* <Route path="/register" component={ RegisterPage } /> */}
+                <Route path="/forget-password" component={ ForgetPasswordPage } />
+                <Route path="/home-student/:id" component={ DashboardStudent } />
+                <Route path="/add-certificate/:id" component={ AddStudentCertificate } />
+                <Route path="/view-certificates/:id" component={ ViewStudentCertificates } />
+                <Route path="/student-certificate/:idAdv" component={ StudentCertificatePaper } />
+                <Route path="/home-secretary/:id" component={ DashboardSecretary } />
+                <Route path="/view-student-certificates/:id" component={ ListStudentCertificates } />
+                <Route path="/validate-certificate/:id/:idAdv" component={ ValidateCertificatePaper } />
+                <Route exact path="/page-not-found" component={ PageNotFound } />
+            </Routes>
+        </div>
     )
 }
