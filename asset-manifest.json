@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/manage-school-certificates-app/static/css/main.0a57dc54.css",
+    "main.js": "/manage-school-certificates-app/static/js/main.ee5fd2bb.js",
+    "static/media/circles-home.png": "/manage-school-certificates-app/static/media/circles-home.4711edf5ee52941f8f45.png",
+    "static/media/sign-default.jpg": "/manage-school-certificates-app/static/media/sign-default.097343c8f3b2b8c29c4e.jpg",
+    "static/media/bg.png": "/manage-school-certificates-app/static/media/bg.ef575c29b7ce56dfa985.png",
+    "static/media/logousv.png": "/manage-school-certificates-app/static/media/logousv.4ac90d7688012c2dc9d2.png",
+    "static/media/avatar.jpg": "/manage-school-certificates-app/static/media/avatar.5d9ea6317191df85e1b9.jpg",
+    "index.html": "/manage-school-certificates-app/index.html",
+    "main.0a57dc54.css.map": "/manage-school-certificates-app/static/css/main.0a57dc54.css.map",
+    "main.ee5fd2bb.js.map": "/manage-school-certificates-app/static/js/main.ee5fd2bb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0a57dc54.css",
+    "static/js/main.ee5fd2bb.js"
+  ]
+}
