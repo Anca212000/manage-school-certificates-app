@@ -1,5 +1,7 @@
-# Aplicatie de gestionare a adeverintelor scolare
-School certificates management application
+# School certificates management application
+Aplicatie de gestionare a adeverintelor scolare
+
+## ReactJs, JSON Database
 
 ![Screenshot 2024-09-08 122046](https://github.com/user-attachments/assets/551964ea-43de-4f07-8d7f-e8efa93a9ae3)
 
