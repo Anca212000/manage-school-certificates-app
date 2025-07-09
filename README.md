@@ -3,8 +3,6 @@ Aplicatie de gestionare a adeverintelor scolare
 
 ## ReactJs, JSON Database
 
-Live DEMO: [Click here](https://school-certificates-management.netlify.app/)
-
 Try to login with these emails:
 <ul>
   <li>decan@usm.ro</li>
