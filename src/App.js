@@ -1,5 +1,10 @@
 import React from 'react'
-import { Route, Routes , Link } from 'react-router-dom'
+import {
+    HashRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+} from "react-router-dom";
 
 import LandingPage from './components/pages/LandingPage'
 import LoginPage from './components/pages/LoginPage'
@@ -18,8 +23,9 @@ import './App.css'
 
 export default function App() {
     return (
-        <div>
-            <Routes>
+        <Router>
+            <div>
+                <Switch>
                 <Route exact path="/" component={ LandingPage } />
                 <Route path="/login" component={ LoginPage } />
                 {/* <Route path="/register" component={ RegisterPage } /> */}
@@ -32,7 +38,8 @@ export default function App() {
                 <Route path="/view-student-certificates/:id" component={ ListStudentCertificates } />
                 <Route path="/validate-certificate/:id/:idAdv" component={ ValidateCertificatePaper } />
                 <Route exact path="/page-not-found" component={ PageNotFound } />
-            </Routes>
-        </div>
+                </Switch>
+            </div>
+        </Router>
     )
 }
